@@ -1,0 +1,35 @@
+#!/bin/bash
+# Проверяем наличие директории /var и создаем ее, если она отсутствует
+if [ ! -d "/var" ]; then
+    mkdir /var
+fi
+# Считываем переменную globcount из файла /var/globcount
+if [ -f "/var/globcount" ]; then
+    globcount=$(< /var/globcount)
+else
+    globcount=0
+fi
+
+# Проверяем наличие файла /tmp/counter и создаем его с начальным значением "0", если он отсутствует
+if [ ! -f "/tmp/counter" ]; then
+    echo "0" > /tmp/counter
+fi
+
+# Считываем переменную counter из файла /tmp/counter
+counter=$(< /tmp/counter)
+
+# Увеличиваем значения переменных globcount и counter на 1
+((globcount++))
+((counter++))
+
+# Записываем новое значение globcount обратно в файл /var/globcount
+echo "$globcount" > /var/globcount
+
+# Записываем новое значение counter обратно в файл /tmp/counter
+echo "$counter" > /tmp/counter
+
+# Выводим на экран количество запусков с момента последней перезагрузки (из файла /tmp/counter)
+echo "Количество запусков с момента перезагрузки: $counter"
+
+# Выводим на экран общее количество запусков (из файла /var/globcount)
+echo "Всего запусков: $globcount"
